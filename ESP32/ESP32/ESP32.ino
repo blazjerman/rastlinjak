@@ -16,10 +16,11 @@ const char* ssid = "TPJerman";
 const char* wifi_password = "pikicaintoncek";
 
 //Podatki naslova:
-const String php_server = "http://www.studenti.famnit.upr.si/~89201094/ESP32Rastlinjak/ControllerRequest/";
+const String php_server = "https://www.studenti.famnit.upr.si/~89201094/rastlinjak/ESP32/ESP32_PHP_requests/";
 
 //Podatki ESP-ja:
 const int check_updates = 10000;//v milisekundah
+int WiFi_reconect_interval = 300;//v milisekundah
 
 String ESP32_id;
 long update_interval = 5;//V sekundah
@@ -61,7 +62,6 @@ void sendSensorsData(){
 }
 
 void initOutputs(){
-  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 //Posodobi senzorje ob requestu (v outputs je vsak bit en output prvi bit je za testiranje, ta kontrlolira LED_BUILTIN.):
@@ -80,6 +80,7 @@ void updateOutputs(){
 //SPODNJE KODE NE TIKAJ!!!
 
 void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
   if (LOG){
     Serial.begin(9600);
     Serial.println("Starting....");
@@ -154,14 +155,26 @@ void checkInterupt(){
 
 //Poveži se na WiFi:
 void initWiFi(){
+  
   if(WiFi.status()==WL_CONNECTED)return;
+  
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, wifi_password);
+  
   if(LOG)Serial.println("Connecting to WiFi:");
+  
   while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
+    
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(WiFi_reconect_interval/2);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(WiFi_reconect_interval/2);
+
+    updateOutputs();
+    
     if(LOG)Serial.print(".");
   }
+
   if(LOG)Serial.println("\n"+WiFi.localIP());
 }
 
