@@ -9,7 +9,7 @@
 
 
 //Prikaži potek v terminalu:
-const bool LOG = true;
+const bool LOG = false;
 
 //Podatki za se povezat na WiFi:
 const char* ssid = "TPJerman";
@@ -169,6 +169,8 @@ void initWiFi(){
     delay(WiFi_reconect_interval/2);
     digitalWrite(LED_BUILTIN, LOW);
     delay(WiFi_reconect_interval/2);
+
+    updateOutputs();
     
     if(LOG)Serial.print(".");
   }
