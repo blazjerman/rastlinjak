@@ -9,19 +9,20 @@
 
 
 //Prikaži potek v terminalu:
-bool LOG = true;
+const bool LOG = false;
 
 //Podatki za se povezat na WiFi:
 const char* ssid = "TPJerman";
 const char* wifi_password = "pikicaintoncek";
 
 //Podatki naslova:
-String php_server = "http://www.studenti.famnit.upr.si/~89201094/ESP32Rastlinjak/ControllerRequest/";
+const String php_server = "http://www.studenti.famnit.upr.si/~89201094/ESP32Rastlinjak/ControllerRequest/";
 
 //Podatki ESP-ja:
+const int check_updates = 10000;//v milisekundah
+
 String ESP32_id;
 long update_interval = 5;//V sekundah
-int check_updates = 10000;//v milisekundah
 int outputs = 0;
 
 //Interupt
@@ -63,7 +64,7 @@ void initOutputs(){
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
-//Posodobi senzorje ob requestu (v outputs je vsak bit en output):
+//Posodobi senzorje ob requestu (v outputs je vsak bit en output prvi bit je za testiranje, ta kontrlolira LED_BUILTIN.):
 void updateOutputs(){
   if(outputs&0x1==1){
       digitalWrite(LED_BUILTIN, HIGH);
