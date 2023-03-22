@@ -1,10 +1,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
-
 #include "DHT.h"
 
 
@@ -17,6 +14,7 @@ const char* wifi_password = "pikicaintoncek";
 
 //Podatki naslova:
 const String php_server = "https://www.studenti.famnit.upr.si/~89201094/rastlinjak/ESP32/ESP32_PHP_requests/";
+const String php_password = "geselce";
 
 //Podatki ESP-ja:
 const int check_updates = 10000;//v milisekundah
@@ -27,7 +25,7 @@ long update_interval = 5;//V sekundah
 int outputs = 0;
 
 //Interupt
-volatile bool interupt = false;
+volatile bool interupt = true; //Pri priklopu pošlji podatke senzorjev
 hw_timer_t *timer = NULL;
 
 
@@ -121,14 +119,14 @@ void initInterupt(){
 void updateLocalData(){
 
   //Posodobi outpute:
-  int outputs_data = getOrSendData("get_outputs.php?ESP32_id="+ESP32_id).toInt();
+  int outputs_data = getOrSendData("get_outputs.php", "ESP32_id="+ESP32_id).toInt();
   if(outputs!=outputs_data){
     outputs=outputs_data;
     updateOutputs();
   }
 
   //Posodobi interval posodobitev:
-  int update_interval_data = getOrSendData("get_update_interval.php?ESP32_id="+ESP32_id).toInt();
+  int update_interval_data = getOrSendData("get_update_interval.php", "ESP32_id="+ESP32_id).toInt();
   if(update_interval!=update_interval_data){
     update_interval=update_interval_data;
     updateInterapterTime();
@@ -178,26 +176,22 @@ void initWiFi(){
   if(LOG)Serial.println("\n"+WiFi.localIP());
 }
 
-//Pridobi mac address (mac je String):
-String getMac(){
-  return WiFi.macAddress();
-}
 
 //Pridobi id ESP-ja:
 void getId(){
-  ESP32_id = getOrSendData("get_ESP32_id.php?mac="+getMac());
+  ESP32_id = getOrSendData("get_ESP32_id.php","mac="+WiFi.macAddress());
   if(LOG)Serial.println("Id je: "+ESP32_id);
 }
 
 
 //Pridobi/pošlji podatke iz php-ja (Poskušaj dokler jih ne dobiš):
-String getOrSendData(String request){
+String getOrSendData(String php_file, String request){
 
   String data;
   bool error = true;
 
   HTTPClient http;
-  http.begin(php_server+request);
+  http.begin(php_server+php_file+"?password="+php_password+"&"+request);
   
   while(error){
       int httpCode = http.GET();
@@ -222,7 +216,7 @@ String getOrSendData(String request){
 
 //Pošlji na bazo podatke senzorja:
 void sendSensorData(String name,String value,String sensor_id){
-  getOrSendData("set_sensors_data.php?name="+name+"&value="+value+"&ESP32_id="+ESP32_id+"&sensor_id="+sensor_id);
+  getOrSendData("set_sensors_data.php", "name="+name+"&value="+value+"&ESP32_id="+ESP32_id+"&sensor_id="+sensor_id);
 }
 
 

@@ -2,13 +2,18 @@
 
     //Zelo slaba koda (ne pregleduje nobenih napak...)
 
+
+
+
     include("db.php");
+    include("secure_connecion.php");
 
 
     
+    if(!checkPassword())return;
 
+    
     $mac = $_GET['mac'];
-
 
 
     $sql =  "SELECT id FROM ESP32 WHERE mac = '$mac'";
@@ -16,13 +21,7 @@
     $id = $q->fetch_assoc();
 
 
-
     echo($id["id"]);
 
-
-
-
-
-    
 
 ?>

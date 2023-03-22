@@ -3,7 +3,14 @@
     //Zelo slaba koda (ne pregleduje nobenih napak...)
 
     
+
+    
     include("db.php");
+    include("secure_connecion.php");
+
+
+
+    if(!checkPassword())return;
 
     
     $ESP_id = $_GET['ESP32_id'];
