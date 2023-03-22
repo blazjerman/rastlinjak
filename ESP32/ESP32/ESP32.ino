@@ -16,7 +16,7 @@ const char* ssid = "TPJerman";
 const char* wifi_password = "pikicaintoncek";
 
 //Podatki naslova:
-const String php_server = "http://www.studenti.famnit.upr.si/~89201094/ESP32Rastlinjak/ControllerRequest/";
+const String php_server = "/home/blaz/sola/public_html/rastlinjak/ESP32/ESP32_PHP_requests/";
 
 //Podatki ESP-ja:
 const int check_updates = 10000;//v milisekundah
