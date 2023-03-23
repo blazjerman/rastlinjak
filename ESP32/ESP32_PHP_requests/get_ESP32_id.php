@@ -1,13 +1,12 @@
 <?php
 
-    //Zelo slaba koda (ne pregleduje nobenih napak...)
+    //Zelo slaba koda, ker ne pregleduje nobenih napak.
 
 
 
 
     include("db.php");
-    include("secure_connecion.php");
-
+    include("secure_connection.php");
 
     
     if(!checkPassword())return;

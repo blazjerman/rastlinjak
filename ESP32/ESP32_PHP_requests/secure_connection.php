@@ -1,11 +1,11 @@
 <?php
 
+//Zelo slaba koda, ker ne pregleduje nobenih napak.
+
+
+
+
 //To naj bi bil security XD
-
-
-
-
-
 function checkPassword() {
 
     $password = "geselce";

@@ -16,12 +16,14 @@ const char* wifi_password = "pikicaintoncek";
 const String php_server = "https://www.studenti.famnit.upr.si/~89201094/rastlinjak/ESP32/ESP32_PHP_requests/";
 const String php_password = "geselce";
 
+
 //Podatki ESP-ja:
 const int check_updates = 10000;//v milisekundah
-int WiFi_reconect_interval = 300;//v milisekundah
+const int WiFi_reconect_interval = 300;//v milisekundah
+const int php_try_interval = 300;//v milisekundah
 
 String ESP32_id;
-long update_interval = 5;//V sekundah
+long update_interval = 60;//V sekundah
 int outputs = 0;
 
 //Interupt
@@ -30,7 +32,7 @@ hw_timer_t *timer = NULL;
 
 
 
-//DODAJANJE_SENZORJEV_IN_OUTPUTOV--------------------------------------------------------------------------------
+//DODAJANJE_SENZORJEV_IN_OUTPUTOV-------------------------------------------------------------------------------------------------------
 
 //Podatki senzorjev:
 //DHT11
@@ -48,7 +50,9 @@ void initSensors(){
   }
 }
 
-//Pošlji requeste za vsak senzor posebaj (malo neume je to, da se dela n rquestov):
+//Pošlji requeste za vsak senzor posebaj (malo neumno je to, da se dela n requestov):
+//Vsak senzor ima svoj id.
+
 void sendSensorsData(){
   //DHT11
   sendSensorData("temperature",String(dht.readTemperature()),"0");
@@ -70,7 +74,7 @@ void updateOutputs(){
       digitalWrite(LED_BUILTIN, LOW);
   }
 }
-//DODAJANJE_SENZORJEV_IN_OUTPUTOV--------------------------------------------------------------------------------
+//DODAJANJE_SENZORJEV_IN_OUTPUTOV-------------------------------------------------------------------------------------------------------
 
 
 
@@ -83,7 +87,7 @@ void setup() {
     Serial.begin(9600);
     Serial.println("Starting....");
   }
-  initWiFi();
+  initWiFi(true);
   getId();
   initSensors();
   initOutputs();
@@ -92,18 +96,14 @@ void setup() {
 
 
 void loop() {
-  if(WiFi.status()==WL_CONNECTED){
-    checkInterupt();
-    updateLocalData();
-  }else{
-    if(LOG)Serial.println("WiFi connection lost!!!");
-    initWiFi();
-  }
+  initWiFi(false);
+  updateLocalData();
+  checkInterupt();
   delay(check_updates);
 }
 
 
-//Interupt (Obevezno more bit pred initInterupt()):
+//Interupt (Obvezno more bit pred initInterupt()):
 void IRAM_ATTR onTimer() {
   interupt = true;
 }
@@ -124,6 +124,7 @@ void updateLocalData(){
     outputs=outputs_data;
     updateOutputs();
   }
+  if(LOG)Serial.println("Outputs bits: "+String(outputs));  
 
   //Posodobi interval posodobitev:
   int update_interval_data = getOrSendData("get_update_interval.php", "ESP32_id="+ESP32_id).toInt();
@@ -131,10 +132,7 @@ void updateLocalData(){
     update_interval=update_interval_data;
     updateInterapterTime();
   }
-  
   if(LOG)Serial.println("Update every: "+String(update_interval)+" Second.");
-  if(LOG)Serial.println("Outputs bits: "+String(outputs));
-  
 }
 
 //Posodobi čas interapterja
@@ -144,7 +142,7 @@ void updateInterapterTime(){
   timerAlarmEnable(timer);
 }
 
-//Preveri če se je zgodil interupt in zaženi pošiljanje podatkov senzorjev:
+//Preveri, če se je zgodil interupt in zaženi pošiljanje podatkov senzorjev:
 void checkInterupt(){
   if (interupt == false)return; 
   interupt = false;
@@ -152,9 +150,11 @@ void checkInterupt(){
 }
 
 //Poveži se na WiFi:
-void initWiFi(){
+void initWiFi(bool first_time){
   
   if(WiFi.status()==WL_CONNECTED)return;
+
+  if(LOG && !first_time)Serial.println("WiFi connection lost!!!");  
   
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, wifi_password);
@@ -168,12 +168,14 @@ void initWiFi(){
     digitalWrite(LED_BUILTIN, LOW);
     delay(WiFi_reconect_interval/2);
 
-    updateOutputs();
-    
     if(LOG)Serial.print(".");
+
   }
 
-  if(LOG)Serial.println("\n"+WiFi.localIP());
+  updateOutputs();  
+
+  if(LOG)Serial.println("\nSuccesful connection! Ip: "+String(WiFi.localIP()));
+
 }
 
 
@@ -184,33 +186,32 @@ void getId(){
 }
 
 
-//Pridobi/pošlji podatke iz php-ja (Poskušaj dokler jih ne dobiš):
+//Pridobi/pošlji podatke iz php-ja (Poskušaj, dokler jih ne dobiš/pošlješ):
 String getOrSendData(String php_file, String request){
-
-  String data;
-  bool error = true;
 
   HTTPClient http;
   http.begin(php_server+php_file+"?password="+php_password+"&"+request);
   
-  while(error){
-      int httpCode = http.GET();
+  while(true){
+
+    int httpCode = http.GET();
+    
     if(httpCode > 0) {
+
       if(httpCode == HTTP_CODE_OK) {
-          data = http.getString();
-          error = false;
-      }else {
-        if(LOG)Serial.printf("[HTTP] GET... code: %d\n", httpCode);
-      }
-    }
-    else {
-      if(LOG)Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
-    }
-    initWiFi();
+        
+          String data = http.getString();
+          http.end();
+          if(LOG)Serial.println("Succesful request "+php_file+": "+data);
+          return data;  
+           
+      }else if(LOG)Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+    }else if(LOG)Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+
+    delay(php_try_interval);
+    initWiFi(false);    
+
   }
-  http.end();
-  if(LOG)Serial.println("Succesful request: "+data);
-  return data;
 }
 
 
@@ -218,15 +219,4 @@ String getOrSendData(String php_file, String request){
 void sendSensorData(String name,String value,String sensor_id){
   getOrSendData("set_sensors_data.php", "name="+name+"&value="+value+"&ESP32_id="+ESP32_id+"&sensor_id="+sensor_id);
 }
-
-
-
-
-
-
-
-
-
-
-
 
