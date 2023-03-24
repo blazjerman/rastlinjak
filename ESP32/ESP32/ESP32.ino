@@ -55,12 +55,12 @@ void initSensors(){
 
 void sendSensorsData(){
   //DHT11
-  sendSensorData("temperature",String(dht.readTemperature()),"0");
-  sendSensorData("humidity",String(dht.readHumidity()),"0");
+  sendSensorData("temperature", String(dht.readTemperature()), "0");
+  sendSensorData("humidity", String(dht.readHumidity()), "0");
   //BMP280
-  sendSensorData("temperature",String(bme.readTemperature()),"1");
-  sendSensorData("pressure",String(bme.readPressure()),"1");
-  sendSensorData("altitude",String(bme.readAltitude()),"1");
+  sendSensorData("temperature", String(bme.readTemperature()), "1");
+  sendSensorData("pressure", String(bme.readPressure()), "1");
+  sendSensorData("altitude", String(bme.readAltitude()), "1");
 }
 
 void initOutputs(){
