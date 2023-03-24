@@ -4,8 +4,7 @@ const dotenv = require('dotenv').config();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const {sequelize, connectDB} = require('./config/db');
-const { connect } = require('http2');
+const {connectDB} = require('./config/db');
 // const {errorHandler} = require('./middleware/errorMiddlewre');
 
 const app = express();
@@ -13,7 +12,13 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({origin: true}));
+app.use(cors({ origin: true }));
+
+// routes
+app.use('/api/temperature', require('./models/Temperature'));
+app.use('/api/pressure', require('./models/Pressure'));
+app.use('/api/humidity', require('./models/Humidity'));
+app.use('/api/esp', require('./models/Temperature'));
 
 // test connection to database
 connectDB();
