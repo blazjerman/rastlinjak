@@ -1,5 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const esp32 = require('../models/ESP32');
+const {User} = require('../models/User');
 
 module.exports = router;

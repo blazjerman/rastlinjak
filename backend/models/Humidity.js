@@ -1,7 +1,7 @@
 const { sequelize } = require('../config/db');
 const { DataTypes } = require('sequelize');
 
-export const Humidity = sequelize.define('Humidity', {
+const Humidity = sequelize.define('Humidity', {
   // Model attributes are defined here
   value: {
     type: DataTypes.FLOAT,
@@ -21,4 +21,7 @@ export const Humidity = sequelize.define('Humidity', {
   }
 }, {
   // Other model options go here
+  freezeTableName: true
 });
+
+module.exports = Humidity;

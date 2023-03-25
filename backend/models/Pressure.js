@@ -1,7 +1,7 @@
 const { sequelize } = require('../config/db');
 const { DataTypes } = require('sequelize');
 
-export const Pressure = sequelize.define('Pressure', {
+const Pressure = sequelize.define('Pressure', {
   // Model attributes are defined here
   value: {
     type: DataTypes.FLOAT,
@@ -21,4 +21,7 @@ export const Pressure = sequelize.define('Pressure', {
   }
 }, {
   // Other model options go here
+  freezeTableName: true
 });
+
+module.exports = Pressure;

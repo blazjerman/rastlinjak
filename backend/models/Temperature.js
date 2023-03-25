@@ -1,7 +1,7 @@
 const { sequelize } = require('../config/db');
 const { DataTypes } = require('sequelize');
 
-export const Temperature = sequelize.define('Temperature', {
+const Temperature = sequelize.define('temperature', {
   // Model attributes are defined here
   value: {
     type: DataTypes.FLOAT,
@@ -21,4 +21,7 @@ export const Temperature = sequelize.define('Temperature', {
   }
 }, {
   // Other model options go here
+  freezeTableName: true
 });
+
+module.exports = Temperature;

@@ -15,10 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: true }));
 
 // routes
-app.use('/api/temperature', require('./models/Temperature'));
-app.use('/api/pressure', require('./models/Pressure'));
-app.use('/api/humidity', require('./models/Humidity'));
-app.use('/api/esp', require('./models/Temperature'));
+app.use('/api/sensors', require('./routes/sensors'));
+app.use('/api/esp', require('./routes/esp'));
+app.use('/api/auth', require('./routes/auth'));
 
 // test connection to database
 connectDB();

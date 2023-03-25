@@ -1,14 +1,15 @@
 const { sequelize } = require('../config/db');
 const { DataTypes } = require('sequelize');
 
-export const ESP32 = sequelize.define('ESP32', {
+const ESP32 = sequelize.define('ESP32', {
   // Model attributes are defined here
   id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    primaryKey: true
   },
   time: {
-    mac: DataTypes.TEXT,
+    type: DataTypes.TEXT,
     allowNull: false
   },
   update_interval: {
@@ -21,4 +22,7 @@ export const ESP32 = sequelize.define('ESP32', {
   }
 }, {
   // Other model options go here
+  freezeTableName: true
 });
+
+module.exports = ESP32;

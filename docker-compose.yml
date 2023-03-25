@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql
+    container_name: rastlinjak_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sqladmin
+      MYSQL_USER: codeigniter
+      MYSQL_PASSWORD: codeigniter2019
+      MYSQL_DATABASE: Rastlinjak
+    volumes: ['dbdata:/var/lib/mysql']
+    ports:
+      - '3306:3306'
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+
+volumes:
+  dbdata:
