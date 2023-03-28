@@ -20,7 +20,6 @@ const Pressure = sequelize.define('Pressure', {
     allowNull: false
   }
 }, {
-  // Other model options go here
   freezeTableName: true
 });
 

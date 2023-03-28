@@ -20,7 +20,6 @@ const Humidity = sequelize.define('Humidity', {
     allowNull: false
   }
 }, {
-  // Other model options go here
   freezeTableName: true
 });
 

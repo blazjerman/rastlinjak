@@ -24,7 +24,7 @@ router.get('/temperature', async (req, res) => {
   });
 });
 
-router.get('/temperature/now', async(req, res) => {
+router.get('/temperature/last', async(req, res) => {
   let sensor_id = req.query.sensor_id;
   let ESP32_id = req.query.esp_id;
 
@@ -67,7 +67,7 @@ router.get('/humidity', async (req, res) => {
   });
 });
 
-router.get('/humidity/now', async (req, res) => {
+router.get('/humidity/last', async (req, res) => {
   let sensor_id = req.query.sensor_id;
   let ESP32_id = req.query.esp_id;
 
@@ -110,7 +110,7 @@ router.get('/pressure', async (req, res) => {
   });
 });
 
-router.get('/pressure/now', async (req, res) => {
+router.get('/pressure/last', async (req, res) => {
   let sensor_id = req.query.sensor_id;
   let ESP32_id = req.query.esp_id;
 

@@ -20,7 +20,6 @@ const Temperature = sequelize.define('temperature', {
     allowNull: false
   }
 }, {
-  // Other model options go here
   freezeTableName: true
 });
 

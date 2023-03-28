@@ -8,7 +8,7 @@ const ESP32 = sequelize.define('ESP32', {
     allowNull: false,
     primaryKey: true
   },
-  time: {
+  mac: {
     type: DataTypes.TEXT,
     allowNull: false
   },
@@ -17,12 +17,13 @@ const ESP32 = sequelize.define('ESP32', {
     allowNull: false
   },
   outputs: {
-    type: DataTypes.CHAR(100),
+    type: DataTypes.INTEGER,
     allowNull: false
   }
 }, {
-  // Other model options go here
-  freezeTableName: true
+  freezeTableName: true,
+  createdAt: false,
+  updatedAt: false
 });
 
 module.exports = ESP32;
