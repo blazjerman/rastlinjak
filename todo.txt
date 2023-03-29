@@ -1,1 +1,2 @@
-[ ] Find matching Sequelize type for BIT(16) MySQL -> will correct GET ESP info
+[ x ] Find matching Sequelize type for BIT(16) MySQL -> will correct GET ESP info
+[ x ] auth middleware and protected routes
