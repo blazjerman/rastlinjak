@@ -12,6 +12,10 @@ const ESP32 = sequelize.define('ESP32', {
     type: DataTypes.TEXT,
     allowNull: false
   },
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   update_interval: {
     type: DataTypes.INTEGER,
     allowNull: false

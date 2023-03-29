@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const protect = require('../middleware/authMiddleware');
 
 router.post('/login', async (req, res) => {
   const {email, password} = req.body;
@@ -11,6 +12,7 @@ router.post('/login', async (req, res) => {
     res.status(400).json({
       message: "Missing email and/or password"
     });
+    return;
   }
 
   const user = await User.findOne({ 
@@ -70,7 +72,7 @@ router.post('/register', async (req, res) => {
     surname: surname,
     email: email,
     password: hashed,
-    token: token
+    role: "normal"
   });
 
   const token = generateToken(user.id);
@@ -81,6 +83,22 @@ router.post('/register', async (req, res) => {
   });
 });
 
+router.get('/me', protect(), async (req, res) => {
+  await User.findOne({
+    attributes: ['name', 'surname', 'email'],
+    where: {id: req.user.id}
+  })
+  .then(user => res.status(200).json({user}))
+  .catch(err => console.log(err)) 
+});
+
+router.get('/all', protect(["admin"]), async(req, res) => {
+  await User.findAll({
+    attributes: ['id', 'name', 'surname', 'email']
+  })
+  .then(users => res.status(200).json({users}))
+  .catch(err => console.log(err))
+});
 
 const generateToken = (id) => {
   return jwt.sign(id, process.env.JWT_SECRET, {});
