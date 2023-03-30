@@ -21,7 +21,7 @@ const protect = (allowedRoles) => {
           return;
         }
         
-        delete user.password;
+        delete user.dataValues.password;
         req.user = user;
   
         next();
