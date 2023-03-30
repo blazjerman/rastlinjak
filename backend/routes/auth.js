@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
   }
 
   const token = generateToken(user.id);
-  delete user.dataValues.password;
+  delete user.dataValues.password
   res.status(200).json({
     user,
     token,

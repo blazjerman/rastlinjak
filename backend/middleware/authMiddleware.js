@@ -21,6 +21,7 @@ const protect = (allowedRoles) => {
           return;
         }
         
+        // remove password before setting request field
         delete user.dataValues.password;
         req.user = user;
   
