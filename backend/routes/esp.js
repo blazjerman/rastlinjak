@@ -1,9 +1,10 @@
 const express = require('express');
 const ESP32 = require('../models/ESP32');
 const router = express.Router();
-const protect = require('../middleware/authMiddleware');
+const {protect, allowRoles} = require('../middleware/authMiddleware');
 
-router.get('/info', async (req,res) => {
+
+router.get('/info', protect, async (req,res) => {
     const id = req.query.id;
 
     if (!id) {
@@ -13,23 +14,31 @@ router.get('/info', async (req,res) => {
         return;
     }
 
-    const info = await ESP32.findOne({
-        attributes: ['outputs'],
+    const esp = await ESP32.findOne({
+        attributes: ['outputs', 'user_id'],
         where: { id: id }
     });
 
-    if (!info) {
+    if (!esp) {
         res.status(404).json({
             message: 'ESP not found'
         });
+        return;
+    }
+
+    if (!esp.user_id == req.user.id) {
+        res.status(401).json({
+            message: 'Not authorized to view this info'
+        });
+        return;
     }
 
     res.status(200).json({
-        info
+        outputs: esp.outputs
     });
 });
 
-router.put('/interval', async (req, res) => {
+router.put('/interval', protect, async (req, res) => {
     const id = req.query.id;
     const {update_interval} = req.body;
 
@@ -44,6 +53,14 @@ router.put('/interval', async (req, res) => {
         res.status(404).json({messasge: 'ESP not found'});
         return;
     }
+
+    if (!esp.user_id == req.user.id) {
+        res.status(401).json({
+            message: 'Not authorized to perform this action'
+        });
+        return;
+    }
+
     const response = await ESP32.update({update_interval: update_interval},{
         where: { id: id }
     });
@@ -75,7 +92,7 @@ router.get('/outputs', async (req, res) => {
     });
 });
 
-router.put('/outputs', async (req, res) => {
+router.put('/outputs', protect, async (req, res) => {
     const id = req.query.id;
     const {pin} = req.body;
     
@@ -84,11 +101,18 @@ router.put('/outputs', async (req, res) => {
         return;
     }
     const esp = await ESP32.findOne({
-        attributes: ['outputs'],
+        attributes: ['outputs', 'user_id'],
         where: { id: id }
     });
     if (!esp) {
         res.status(404).json({messasge: 'ESP not found'});
+        return;
+    }
+
+    if (!esp.user_id == req.user.id) {
+        res.status(401).json({
+            message: 'Not authorized to perform this action'
+        });
         return;
     }
 
@@ -114,14 +138,14 @@ router.put('/outputs', async (req, res) => {
     }
 });
 
-router.get('/all', async (req, res) => {
+router.get('/all', protect, allowRoles(['admin']), async (req, res) => {
     const esps = await ESP32.findAll();
     res.status(200).json({
         esps
     });
 });
 
-router.put('/assignuser', protect(["admin"]), async (req, res) => {
+router.put('/assignuser', protect, allowRoles(['admin']), async (req, res) => {
     const id = req.query.id;
     const {user_id} = req.body;
 
@@ -129,9 +153,7 @@ router.put('/assignuser', protect(["admin"]), async (req, res) => {
         res.status(401).json({message: 'ID not provided'});
         return;
     }
-    const esp = await ESP32.findOne({
-        where: { id: id }
-    });
+    const esp = await ESP32.findOne({where: { id: id }});
     if (!esp) {
         res.status(404).json({messasge: 'ESP not found'});
         return;
@@ -154,14 +176,17 @@ router.put('/assignuser', protect(["admin"]), async (req, res) => {
     }
 });
 
-router.get('/myesps', protect(), async (req, res) => {
-    console.log(req.user.id);
+router.get('/myesps', protect, async (req, res) => {
     const esps = await ESP32.findAll({
         where: {user_id: req.user.id}
     });
 
     res.status(200).json({esps});
 });
+
+
+
+// ==================== helpers ====================
 
 async function getOutputs(id) {
     const esp = await ESP32.findOne({

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const protect = (allowedRoles) => {
+const protect = () => {
   return async (req, res, next) => {
     let token;
   
@@ -12,14 +12,6 @@ const protect = (allowedRoles) => {
         let user = await User.findOne({
           where: {id: decoded}
         });
-
-        if (allowedRoles && !allowedRoles.includes(user.role)) {
-          res.status(401).json({
-            message: "You don't have permission to perform this operation"
-          });
-          // cannot throw error here since it is going to be cached and thrown as "Not authorized"
-          return;
-        }
         
         // remove password before setting request field
         delete user.dataValues.password;
@@ -47,5 +39,22 @@ const protect = (allowedRoles) => {
   };
 }
 
+const allowRoles = (roles) => {
+  return async (req, res, next) => {
+    const user = await User.findOne({
+      where: {id: req.user.id}
+    });
 
-module.exports = protect;
+    if (!roles.includes(user.role)) {
+      res.status(401).json({
+        message: "You don't have permission to perform this operation"
+      });
+      return;
+    }
+
+    next();
+  }
+}
+
+
+module.exports = {protect, allowRoles};
