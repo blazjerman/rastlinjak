@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const protect = require('../middleware/authMiddleware');
+const {protect, allowRoles} = require('../middleware/authMiddleware');
 
 router.post('/login', async (req, res) => {
   const {email, password} = req.body;
@@ -84,7 +84,7 @@ router.post('/register', async (req, res) => {
   });
 });
 
-router.get('/me', protect(), async (req, res) => {
+router.get('/me', protect, async (req, res) => {
   await User.findOne({
     attributes: ['name', 'surname', 'email'],
     where: {id: req.user.id}
@@ -93,7 +93,7 @@ router.get('/me', protect(), async (req, res) => {
   .catch(err => console.log(err)) 
 });
 
-router.get('/all', protect(["admin"]), async(req, res) => {
+router.get('/all', protect, allowRoles(["admin"]), async(req, res) => {
   await User.findAll({
     attributes: ['id', 'name', 'surname', 'email']
   })

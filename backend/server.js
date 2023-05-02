@@ -15,9 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: true }));
 
 // routes
-app.use('/api/sensors', require('./routes/sensors'));
-app.use('/api/esp', require('./routes/esp'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/esp', require('./routes/esp'));
+app.use('/api/sensors', require('./routes/sensors'));
+app.use('/api/automations', require('./routes/automations'));
 
 // test connection to database
 connectDB();

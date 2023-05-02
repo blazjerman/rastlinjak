@@ -61,8 +61,8 @@ router.put('/interval', protect, async (req, res) => {
         return;
     }
 
-    const response = await ESP32.update({update_interval: update_interval},{
-        where: { id: id }
+    const response = await ESP32.update({update_interval: update_interval},
+        {where: { id: id }
     });
     if (response[0] == 1) {
         res.status(200).json({

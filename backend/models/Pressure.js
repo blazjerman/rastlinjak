@@ -1,7 +1,7 @@
 const { sequelize } = require('../config/db');
 const { DataTypes } = require('sequelize');
 
-const Pressure = sequelize.define('Pressure', {
+const Pressure = sequelize.define('pressure', {
   // Model attributes are defined here
   value: {
     type: DataTypes.FLOAT,

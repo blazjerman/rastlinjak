@@ -1,7 +1,7 @@
 const { sequelize } = require('../config/db');
 const { DataTypes } = require('sequelize');
 
-const Humidity = sequelize.define('Humidity', {
+const Humidity = sequelize.define('humidity', {
   // Model attributes are defined here
   value: {
     type: DataTypes.FLOAT,
