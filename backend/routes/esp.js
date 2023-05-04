@@ -4,7 +4,7 @@ const router = express.Router();
 const {protect, allowRoles} = require('../middleware/authMiddleware');
 
 
-router.get('/info', protect, async (req,res) => {
+router.get('/info', /*protect,*/ async (req,res) => {
     const id = req.query.id;
 
     if (!id) {
@@ -26,19 +26,19 @@ router.get('/info', protect, async (req,res) => {
         return;
     }
 
-    if (!esp.user_id == req.user.id) {
+    /*if (!esp.user_id == req.user.id) {
         res.status(401).json({
             message: 'Not authorized to view this info'
         });
         return;
-    }
+    }*/
 
     res.status(200).json({
         outputs: esp.outputs
     });
 });
 
-router.put('/interval', protect, async (req, res) => {
+router.put('/interval', /*protect,*/ async (req, res) => {
     const id = req.query.id;
     const {update_interval} = req.body;
 
@@ -54,12 +54,12 @@ router.put('/interval', protect, async (req, res) => {
         return;
     }
 
-    if (!esp.user_id == req.user.id) {
+    /*if (!esp.user_id == req.user.id) {
         res.status(401).json({
             message: 'Not authorized to perform this action'
         });
         return;
-    }
+    }*/
 
     const response = await ESP32.update({update_interval: update_interval},
         {where: { id: id }
@@ -86,13 +86,12 @@ router.get('/outputs', async (req, res) => {
     }
     
     const outputs = await getOutputs(id);
-    
     res.status(200).json({
         outputs
     });
 });
 
-router.put('/outputs', protect, async (req, res) => {
+router.put('/outputs', /*protect,*/ async (req, res) => {
     const id = req.query.id;
     const {pin} = req.body;
     
@@ -109,12 +108,12 @@ router.put('/outputs', protect, async (req, res) => {
         return;
     }
 
-    if (!esp.user_id == req.user.id) {
+    /*if (!esp.user_id == req.user.id) {
         res.status(401).json({
             message: 'Not authorized to perform this action'
         });
         return;
-    }
+    }*/
 
     const flipped = flipBitAtPosition(esp.outputs, pin);
 
@@ -138,14 +137,21 @@ router.put('/outputs', protect, async (req, res) => {
     }
 });
 
-router.get('/all', protect, allowRoles(['admin']), async (req, res) => {
+router.get('/all', /*protect, allowRoles(['admin']),*/ async (req, res) => {
     const esps = await ESP32.findAll();
     res.status(200).json({
         esps
     });
 });
 
-router.put('/assignuser', protect, allowRoles(['admin']), async (req, res) => {
+router.get('/allfree', /*protect, allowRoles(['admin']),*/ async (req, res) => {
+    const esps = await ESP32.findAll({where: {user_id: null}});
+    res.status(200).json({
+        esps
+    });
+});
+
+router.put('/assignuser', /*protect, allowRoles(['admin']),*/ async (req, res) => {
     const id = req.query.id;
     const {user_id} = req.body;
 
@@ -159,9 +165,15 @@ router.put('/assignuser', protect, allowRoles(['admin']), async (req, res) => {
         return;
     }
 
-    const response = await ESP32.update({user_id: user_id}, {
-        where: { id: id }
-    });
+    if (esp.user_id != null) {
+        // await ESP32.update({user_id: null}, {where: { id: id }})
+        esp.user_id = null;
+        await esp.save();
+    }
+
+    // const response = await ESP32.update({user_id: user_id}, {where: { id: id }});
+    esp.set({user_id: id});
+    const response = await esp.save();
 
     if (response[0] == 1) {
         res.status(200).json({
@@ -174,6 +186,7 @@ router.put('/assignuser', protect, allowRoles(['admin']), async (req, res) => {
             message: `Operation falied`
         });
     }
+    res.send("ok")
 });
 
 router.get('/myesps', protect, async (req, res) => {

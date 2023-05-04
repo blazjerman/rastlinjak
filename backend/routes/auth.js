@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
   });
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register', /*protect, allowRoles(["admin"]),*/ async (req, res) => {
   const {name, surname, email, password} = req.body;
 
   if (!name | !surname | !email | !password) {

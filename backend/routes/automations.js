@@ -48,8 +48,6 @@ router.put('/', async (req, res) => {
     {where: {ESP32_id: ESP32_id, id: automation_id}}
   );
 
-  console.log(response);
-
   if (response[0] == 1) {
     res.status(200).json({
       message: `update sucessful`
