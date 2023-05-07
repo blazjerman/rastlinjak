@@ -12,8 +12,8 @@ const Automations = sequelize.define('automations', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  trigger_time: {
-    type: DataTypes.TIME,
+  cron_string: {
+    type: DataTypes.STRING,
     allowNull: false
   },
   action: {
