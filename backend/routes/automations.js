@@ -42,16 +42,16 @@ router.post('/', async (req, res) => {
 
   let cron_string = null;
   switch (interval) {
-    case 'HOUR':
+    case 'HOURS':
       cron_string = cron.everyHour();
       break;
-    case 'DAY':
+    case 'DAYS':
       t = time.split(':');
       hour = t[0]
       minute = t[1]
-      cron_string = cron.everyDayAt(hour, minute);
+      cron_string = cron.every(count).days(hour, minute);
       break;
-    case 'WEEK':
+    case 'WEEKS':
       hour = t[0]
       minute = t[1]
       cron_string = cron.everyWeekAt(hour, minute);
@@ -60,6 +60,7 @@ router.post('/', async (req, res) => {
 
   if (cron_string == null) {
     res.status(401).json({message: 'unable to create automation from given data'});
+    return;
   }
 
   const response = await Automations.create({
