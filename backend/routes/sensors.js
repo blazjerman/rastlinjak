@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Temperature = require('../models/Temperature');
+const Humidity = require('../models/Humidity');
+const Pressure = require('../models/Pressure');
+
 
 // =============== temperature ===============
 
@@ -54,7 +57,7 @@ router.get('/humidity', async (req, res) => {
   if (!sensor_id) { sensor_id = 0; }
   if (!ESP32_id) { ESP32_id = 0; }
     
-  const humData = await Temperature.findAll({
+  const humData = await Humidity.findAll({
     attributes: ['value', 'time'],
     where: {
       ESP32_id: ESP32_id,
@@ -97,7 +100,7 @@ router.get('/pressure', async (req, res) => {
   if (!sensor_id){ sensor_id = 0; }
   if (!ESP32_id) { ESP32_id = 0; }
     
-  const pressureData = await Temperature.findAll({
+  const pressureData = await Pressure.findAll({
     attributes: ['value', 'time'],
     where: {
       ESP32_id: ESP32_id,
@@ -117,7 +120,7 @@ router.get('/pressure/last', async (req, res) => {
   if (!sensor_id){ sensor_id = 0; }
   if (!ESP32_id) { ESP32_id = 0; }
     
-  const lastPressure = await Temperature.findOne({
+  const lastPressure = await Pressure.findOne({
     attributes: ['value', 'time'],
     where: {
       ESP32_id: ESP32_id,

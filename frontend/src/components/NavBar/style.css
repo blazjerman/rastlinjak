@@ -1,0 +1,57 @@
+.NavBar {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+
+  }
+  
+  .NavBar ul {
+    width: 100%;
+    justify-content: space-around;
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .NavBar li {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .activeTab{
+    background-color: lightblue;
+  }
+  
+  .NavBar li:first-child {
+    margin-left: 0;
+  }
+  
+  .NavBar a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .logout {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #333; /* updated color */
+    border-radius: 5px;
+    border: none;
+    text-decoration: none;
+  }
+  
+  .logout:hover {
+    background-color: #999; /* updated color */
+  }

@@ -190,6 +190,7 @@ router.put('/assignuser', /*protect, allowRoles(['admin']),*/ async (req, res) =
 });
 
 router.get('/myesps', protect, async (req, res) => {
+    console.log('-----------')
     const esps = await ESP32.findAll({
         where: {user_id: req.user.id}
     });

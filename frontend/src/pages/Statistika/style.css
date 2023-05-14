@@ -1,0 +1,25 @@
+.statistika{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    margin: 50px;
+}
+ 
+.statistika > div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.zgodovina{
+    margin: auto;
+    padding: 12px 47px;
+    background-color: white;
+    border-radius: 3px;
+    border-right: 3px solid;
+    border-bottom: 3px solid;
+    border-top: 1px solid;
+    border-left: 1px solid;
+}
