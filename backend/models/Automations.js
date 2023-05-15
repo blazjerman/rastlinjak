@@ -12,6 +12,18 @@ const Automations = sequelize.define('automations', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  count: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  interval: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  time: {
+    type: DataTypes.TIME,
+    allowNull: false
+  },
   cron_string: {
     type: DataTypes.STRING,
     allowNull: false

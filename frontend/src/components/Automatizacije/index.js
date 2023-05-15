@@ -18,7 +18,7 @@ function Automatizacije() {
         <h2>Moje automatizacije</h2>
         {automatizacije.map(automatizacija => (
             <div className='automatizacija'>
-              <div>Every {automatizacija.cron_string} turn {automatizacija.action} on pin {automatizacija.pin}</div> 
+              <div>Every {automatizacija.count} {automatizacija.interval} at {automatizacija.time} turn {automatizacija.action} pin {automatizacija.pin}</div> 
               <div className='deleteAutomatization' onClick={ async () => {
                 await deleteAutomatizacija(automatizacija.id)
                 window.location.reload()

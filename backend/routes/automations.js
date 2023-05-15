@@ -6,12 +6,14 @@ const ESP32 = require('../models/ESP32');
 const {protect} = require('../middleware/authMiddleware');
 
 router.get('/', async (req, res) => {
-  const id = req.query.id;
+  let id = req.query.id;
 
   if (!id) {
-    res.status(401).json({message: 'ID not provided'});
-    return;
+    id = 0;
+    // res.status(401).json({message: 'ID not provided'});
+    // return;
   }
+  console.log(id)
 
   const automations = await Automations.findAll({where: {ESP32_id: id}})
   res.status(200).json({
@@ -28,6 +30,7 @@ router.get('/', async (req, res) => {
 **/
 
 router.post('/', async (req, res) => {
+  console.log("create called")
   const id = req.query.id;
   const {count, interval, time, pin, action} = req.body;
 
@@ -64,7 +67,10 @@ router.post('/', async (req, res) => {
   }
 
   const response = await Automations.create({
-    ESP32_id: id, 
+    ESP32_id: id,
+    count,
+    interval,
+    time,
     cron_string, 
     action,
     pin
@@ -73,16 +79,16 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/', async (req, res) => {
-  const {automation_id, ESP32_id} = req.query;
+  const {automation_id} = req.query;
   const {active} = req.body;
 
-  if (!automation_id | !ESP32_id | !active) {
+  if (!automation_id | !active) {
     res.status(401).json({message: 'missing data'});
     return;
   }
 
   const response = await Automations.update({active: active},
-    {where: {ESP32_id: ESP32_id, id: automation_id}}
+    {where: {id: automation_id}}
   );
 
   if (response[0] == 1) {
@@ -99,15 +105,15 @@ router.put('/', async (req, res) => {
 });
 
 router.delete('/', async (req, res) => {
-  const {automation_id, ESP32_id} = req.query;
+  const {automation_id} = req.query;
 
-  if (!automation_id | !ESP32_id) {
+  if (!automation_id) {
     res.status(401).json({message: 'missing data'});
     return;
   }
 
   const response = await Automations.destroy(
-    {where: {id: automation_id, ESP32_id: ESP32_id}}
+    {where: {id: automation_id}}
   );
 
   if (response == 1) {

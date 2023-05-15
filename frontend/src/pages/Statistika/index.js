@@ -20,7 +20,7 @@ function Statistika() {
   const temperatureData = [
     {
       label: 'Temperature',
-      data: temperature,
+      data: temperature
     },
   ]
 

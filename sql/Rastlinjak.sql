@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 172.18.0.2
--- Generation Time: May 07, 2023 at 07:44 PM
+-- Host: db
+-- Generation Time: May 15, 2023 at 04:35 PM
 -- Server version: 8.0.32
 -- PHP Version: 8.1.17
 
@@ -175,11 +175,23 @@ INSERT INTO `altitude` (`value`, `time`, `sensor_id`, `ESP32_id`) VALUES
 CREATE TABLE `automations` (
   `id` int NOT NULL,
   `ESP32_id` int NOT NULL,
+  `count` int NOT NULL,
+  `interval` varchar(64) NOT NULL,
+  `time` time NOT NULL,
   `cron_string` varchar(128) NOT NULL,
   `action` varchar(255) NOT NULL,
   `pin` int NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `automations`
+--
+
+INSERT INTO `automations` (`id`, `ESP32_id`, `count`, `interval`, `time`, `cron_string`, `action`, `pin`, `active`) VALUES
+(18, 0, 1, 'DAYS', '07:00:00', '00 07 * * *', 'on', 2, 1),
+(19, 0, 1, 'DAYS', '20:00:00', '00 20 * * *', 'off', 2, 1),
+(20, 0, 1, 'HOURS', '09:00:00', '0 * * * *', 'on', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -200,7 +212,7 @@ CREATE TABLE `ESP32` (
 --
 
 INSERT INTO `ESP32` (`id`, `user_id`, `mac`, `update_interval`, `outputs`) VALUES
-(0, NULL, 'C8:F0:9E:F1:C8:84', 1200, b'0000000000000001');
+(0, 2, 'C8:F0:9E:F1:C8:84', 1200, b'0000000000000001');
 
 -- --------------------------------------------------------
 
@@ -499,7 +511,7 @@ INSERT INTO `pressure` (`value`, `time`, `sensor_id`, `ESP32_id`) VALUES
 --
 
 CREATE TABLE `SequelizeMeta` (
-  `name` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
@@ -797,6 +809,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `surname`, `email`, `password`, `role`) VALUES
+(2, 'Andrej', 'Erjavec', 'erandrej@gmail.com', '$2b$10$YslNrrqcc0g/r6Cppuv7keGC2K6nBlUKIcLxMLZAi89S4ntJAoMz.', 'normal');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -858,7 +877,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `automations`
 --
 ALTER TABLE `automations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `ESP32`
@@ -870,7 +889,7 @@ ALTER TABLE `ESP32`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
