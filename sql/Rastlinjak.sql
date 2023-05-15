@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 172.18.0.2
--- Generation Time: May 02, 2023 at 05:49 PM
+-- Generation Time: May 07, 2023 at 07:44 PM
 -- Server version: 8.0.32
 -- PHP Version: 8.1.17
 
@@ -175,7 +175,7 @@ INSERT INTO `altitude` (`value`, `time`, `sensor_id`, `ESP32_id`) VALUES
 CREATE TABLE `automations` (
   `id` int NOT NULL,
   `ESP32_id` int NOT NULL,
-  `trigger_time` time NOT NULL,
+  `cron_string` varchar(128) NOT NULL,
   `action` varchar(255) NOT NULL,
   `pin` int NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
@@ -858,7 +858,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `automations`
 --
 ALTER TABLE `automations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `ESP32`

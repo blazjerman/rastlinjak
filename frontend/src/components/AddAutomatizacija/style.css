@@ -1,0 +1,26 @@
+.addAutomatizationForm{
+    display: flex;
+    /* border: 1px solid black; */
+    width: fit-content;
+}
+
+.addAutomatizationForm > div{
+    margin: 10px;
+}
+
+.input{
+    padding: 10px;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    border: 3px solid black;
+}
+
+.ustvari{
+    margin-top: 27px;
+    height: fit-content;
+    background-color: rgb(80, 184, 80);
+    color: white;
+    padding: 15px 30px;
+}

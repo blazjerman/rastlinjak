@@ -1,7 +1,8 @@
 const express = require('express');
+const router = express.Router();
+const cron = require('cron-time-generator');
 const Automations = require('../models/Automations');
 const ESP32 = require('../models/ESP32');
-const router = express.Router();
 const {protect} = require('../middleware/authMiddleware');
 
 router.get('/', async (req, res) => {
@@ -18,33 +19,69 @@ router.get('/', async (req, res) => {
   });
 });
 
+/**
+ * count - 1,2,3,...,10
+ * interval - HOURS, DAYS, WEEKS
+ * time - time to execute function
+ * pin - pin number to execute action on
+ * action - TURN_ON, TURN_OFF
+**/
+
 router.post('/', async (req, res) => {
   const id = req.query.id;
-  const {trigger_time, pin, action} = req.body;
+  const {count, interval, time, pin, action} = req.body;
 
   if (!id) {
     res.status(401).json({message: 'ID not provided'});
     return;
   }
 
-  if (!trigger_time | !pin | !action) {
+  if (!count | !interval | !pin | !action) {
     res.status(400).json({message: 'One or more fields missing'});
   }
 
-  const response = await Automations.create({ESP32_id: id, trigger_time, pin, action});
+  let cron_string = null;
+  switch (interval) {
+    case 'HOURS':
+      cron_string = cron.everyHour();
+      break;
+    case 'DAYS':
+      t = time.split(':');
+      hour = t[0]
+      minute = t[1]
+      cron_string = cron.every(count).days(hour, minute);
+      break;
+    case 'WEEKS':
+      hour = t[0]
+      minute = t[1]
+      cron_string = cron.everyWeekAt(hour, minute);
+      break;
+  }
+
+  if (cron_string == null) {
+    res.status(401).json({message: 'unable to create automation from given data'});
+    return;
+  }
+
+  const response = await Automations.create({
+    ESP32_id: id, 
+    cron_string, 
+    action,
+    pin
+  });
   res.status(200).json(response);
 });
 
 router.put('/', async (req, res) => {
   const {automation_id, ESP32_id} = req.query;
-  const {trigger_time} = req.body;
+  const {active} = req.body;
 
-  if (!automation_id | !ESP32_id | !trigger_time) {
+  if (!automation_id | !ESP32_id | !active) {
     res.status(401).json({message: 'missing data'});
     return;
   }
 
-  const response = await Automations.update({trigger_time: trigger_time},
+  const response = await Automations.update({active: active},
     {where: {ESP32_id: ESP32_id, id: automation_id}}
   );
 

@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import AuthService from '../services/AuthService';
+import AuthService from '../../services/AuthService';
+import './style.css'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -33,13 +34,14 @@ const Login = () => {
   }
 
   return (
-    <section className="login-box">
+    <section className="login-form">
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <input 
           type="email"
           id = "email"
           name="email"
+          className='input-field'
           value={email}
           placeholder="email"
           onChange={handleChange} />
@@ -49,15 +51,14 @@ const Login = () => {
           type="password"
           id = "passord"
           name="password"
+          className='input-field'
           value={password}
           placeholder="password"
           onChange={handleChange} />
         </div>
-        <div className="form-group">
-          <button type="submit">
-            Login
-          </button>
-        </div>
+        <button className="submit-btn" type="submit-btn">
+          Login
+        </button>
       </form>
     </section>
   )

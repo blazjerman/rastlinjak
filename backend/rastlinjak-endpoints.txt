@@ -1,0 +1,77 @@
+BACKEND SERVER PORT: 5000
+
+============================ AUTH ============================
+
+LOGIN
+   POST /api/auth/login {email, password}
+			
+REGISTER
+   POST /api/auth/register {name, surname email, password}
+   (admin only)
+
+MY USER DATA
+   GET /api/auth/me 								
+
+LIST ALL REGISTERED USERS
+   GET /api/auth/all 							
+   (admin only)
+
+
+============================ MIKROKONTROLERJI ============================
+
+GET INFO ABOUT MICROCONTROLLER
+   GET /api/esp/info?id=_
+
+CHANGE UPDATE INTERVAL
+   PUT /api/esp/interval?id=_ {update_interval (in seconds)}
+
+ALL OUTPUTS OF MICROCONTROLLER (1=ON, 0=OFF)
+   GET /api/esp/outputs?id=_
+
+UPDATE OUTPUT OF SINGLE PIN
+   PUT /api/esp/outputs?id=_ {pin}
+
+ALL REGISTERED MICROCONTROLLERS
+   GET /api/esp/all
+   (admin only)
+
+ALL REGISTERED MICROCONTROLLERS WITHOUT USER
+   GET /api/esp/allfree
+   (admin only)
+
+ASSIGN OWNER TO A MICROCONTROLLER
+   PUT /api/esp/assignuser?id=_ {user_id}
+   (admin only)
+
+GET ALL CONTROLLERS OWNED BY ME
+   GET /api/esp/myesps
+
+============================ SENZORJI ============================
+
+GET /api/sensors/temperature?ESP32_id=_?sensor_id=_
+
+GET /api/sensors/temperature/last?ESP32_id=_?sensor_id=_
+
+enako za vse ostale:
+GET /api/sensors/humidity?ESP32_id=_?sensor_id=_
+GET /api/sensors/humidity/last?ESP32_id=_?sensor_id=_
+
+GET /api/sensors/humidity?ESP32_id=_?sensor_id=_
+GET /api/sensors/humidity/last?ESP32_id=_?sensor_id=_
+
+
+============================ AVTOMATIZACIJE ============================
+
+GET ALL AUTOMATIONS OF ONE MICROCONTROLLER
+	GET /api/automations?id=_
+
+CREATE NEW AUTOMATION FOR MICROCONTROLLER
+	POST /api/automations?id=_ {trigger_time, pin, action}
+	trigger_time je mišljen kot ura v dnevu, ko se avtomatizacija izvede
+
+UPDATE TRIGGER TIME
+	PUT /api/automations?automation_id=_?ESP32_id=_ {trigger_time}
+	
+DELETE AUTOMATION
+	DELETE /api/automations?automation_id=_?ESP32_id=_
+	
