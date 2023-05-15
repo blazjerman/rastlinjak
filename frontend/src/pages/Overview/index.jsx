@@ -13,8 +13,14 @@ import Obvestila from '../Obvestila'
 const Overview = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!user) navigate('/login')
+  }, [user]);
   
-  if (!user) navigate('/login')
+  if (!user) {
+    return(<></>)
+  }
   return (
     <section>
       <h3>{user.name}'s rastlinjak</h3>
