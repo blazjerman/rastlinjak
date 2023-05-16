@@ -4,14 +4,14 @@ import './style.css'
 function AddAutomatizacija() {
 
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault()
         const count = document.getElementById('count').value
         const time = document.getElementById('time').value
         const action = document.getElementById('action').value
         const pin = document.getElementById('pin').value
         const interval = document.getElementById('interval').value
-        addAutomatizacija({count, time, action, pin, interval})
+        await addAutomatizacija({count, time, action, pin, interval})
         window.location.reload();
     }
 
