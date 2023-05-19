@@ -16,7 +16,7 @@ const Overview = () => {
 
   useEffect(() => {
     if(!user) navigate('/login')
-  }, [user]);
+  }, [navigate, user]);
   
   if (!user) {
     return(<></>)

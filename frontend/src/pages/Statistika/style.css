@@ -1,4 +1,4 @@
-.statistika{
+.statistika {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
@@ -6,11 +6,17 @@
     margin: 50px;
 }
  
-.statistika > div{
+.statistika .stats {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+}
+
+.statistika .current {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    margin: 0 25px 0;
 }
 
 .zgodovina{

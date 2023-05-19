@@ -10,9 +10,8 @@ function MyChart({data}) {
   )
 
   const secondaryAxes = React.useMemo(() => [{
-        getValue: datum => {
-            return datum.value
-        },
+    getValue: datum => datum.value,
+    elementType: 'line'
     },
     ],[]
   )
