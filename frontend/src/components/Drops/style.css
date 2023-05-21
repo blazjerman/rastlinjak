@@ -1,0 +1,17 @@
+.rain_drops{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.rain_drop{
+    margin: 20px;
+    height: 100px;
+}
+.drop{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

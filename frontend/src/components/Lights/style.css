@@ -1,0 +1,18 @@
+.luci{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.light_bulb{
+    margin: 20px;
+    height: 100px;
+}
+
+.luc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

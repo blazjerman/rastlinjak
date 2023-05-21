@@ -23,7 +23,6 @@ function NavBar() {
         <li className={pathname === '/kamere' ? 'activeTab' : null}><Link to="/kamere">Kamere</Link></li>
         <li className={pathname === '/upravljanje' ? 'activeTab' : null}><Link to="/upravljanje">Upravljanje</Link></li>
         <li className={pathname === '/automatizacija' ? 'activeTab' : null}><Link to="/automatizacija">Automatizacija</Link></li>
-        <li className={pathname === '/obvestila' ? 'activeTab' : null}><Link to="/obvestila">Obvestila</Link></li>
         <button className='logout' onClick={logout}>Logout</button>
       </ul>
     </nav>

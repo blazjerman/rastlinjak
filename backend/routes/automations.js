@@ -13,7 +13,6 @@ router.get('/', async (req, res) => {
     // res.status(401).json({message: 'ID not provided'});
     // return;
   }
-  console.log(id)
 
   const automations = await Automations.findAll({where: {ESP32_id: id}})
   res.status(200).json({
@@ -30,7 +29,6 @@ router.get('/', async (req, res) => {
 **/
 
 router.post('/', async (req, res) => {
-  console.log("create called")
   const id = req.query.id;
   const {count, interval, time, pin, action} = req.body;
 

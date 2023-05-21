@@ -120,21 +120,14 @@ router.put('/outputs', /*protect,*/ async (req, res) => {
     const response = await ESP32.update({outputs: flipped},{
         where: { id: id }
     });
-
     const outputs = await getOutputs(id);
-
-    if (response[0] == 1) {
+    if (response.length) {
         res.status(200).json({
             message: `ESP id ${id} update interval updated sucessfully`,
             outputs: outputs
         });
     }
     // if the value is already the same in database, response will be [0] as well - will report as error
-    else {
-        res.status(400).json({
-            message: `ESP id ${id} update interval update failed`
-        });
-    }
 });
 
 router.get('/all', /*protect, allowRoles(['admin']),*/ async (req, res) => {
@@ -190,7 +183,6 @@ router.put('/assignuser', /*protect, allowRoles(['admin']),*/ async (req, res) =
 });
 
 router.get('/myesps', protect, async (req, res) => {
-    console.log('-----------')
     const esps = await ESP32.findAll({
         where: {user_id: req.user.id}
     });

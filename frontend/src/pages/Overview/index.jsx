@@ -30,7 +30,6 @@ const Overview = () => {
         <Route element={<Kamere />} path='kamere'>Kamere</Route>
         <Route element={<Upravljanje />} path='upravljanje'>Upravljanje</Route>
         <Route element={<Automatizacija />} path='automatizacija'>Automatizacija</Route>
-        <Route element={<Obvestila />} path='obvestila'>Obvestila</Route>
       </Routes>
     </section>
   )
