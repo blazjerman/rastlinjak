@@ -23,7 +23,7 @@ function Drop() {
 
 
   const switchZalivalnik = (id) => setDrops(drops.map(drop => drop.id === id ? {...drop, state: !drop.state} : drop))
-  4,13,16
+  // 4,13,16
   
   return (
     <div>
