@@ -182,7 +182,7 @@ CREATE TABLE `automations` (
   `action` varchar(255) NOT NULL,
   `pin` int NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `automations`
